@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Data Analytics Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                              url('https://images.pexels.com/photos/1637436/pexels-photo-1637436.jpeg');
+            background-size: cover;
+            background-position: center;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-indigo-900 text-white shadow-lg">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-gamepad text-2xl"></i>
+                    <span class="font-semibold text-xl">GameData</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-white font-medium">Home</a>
+                    <a href="dashboard.html" class="text-gray-300 hover:text-white">Dashboard</a>
+                    <a href="data-entry.html" class="text-gray-300 hover:text-white">Data Entry</a>
+                    <a href="predictions.html" class="text-gray-300 hover:text-white">Predictions</a>
+                </div>
+                <button class="md:hidden focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg text-white py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">Game Data Analytics Platform</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+                Explore, analyze, and visualize video game data across platforms, genres, and years
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="dashboard.html" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+                    <i class="fas fa-chart-line mr-2"></i> View Dashboard
+                </a>
+                <a href="data-entry.html" class="bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+                    <i class="fas fa-database mr-2"></i> Add Game Data
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">Key Features</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md transition duration-300 card-hover">
+                    <div class="text-indigo-600 mb-4">
+                        <i class="fas fa-chart-pie text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Interactive Visualizations</h3>
+                    <p class="text-gray-600">
+                        Explore game sales trends, genre popularity, and score correlations through dynamic charts and graphs.
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md transition duration-300 card-hover">
+                    <div class="text-indigo-600 mb-4">
+                        <i class="fas fa-search-dollar text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Sales Analysis</h3>
+                    <p class="text-gray-600">
+                        Track global sales performance across platforms and time periods to identify market trends.
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md transition duration-300 card-hover">
+                    <div class="text-indigo-600 mb-4">
+                        <i class="fas fa-robot text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Predictive Insights</h3>
+                    <p class="text-gray-600">
+                        Get sales predictions based on game attributes using our machine learning models.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-gamepad text-2xl"></i>
+                        <span class="font-semibold text-xl">GameData</span>
+                    </div>
+                    <p class="mt-2 text-gray-400">© 2023 Game Data Analytics. All rights reserved.</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
