@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Predictions | GameData</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .prediction-card {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+        .model-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-indigo-900 text-white shadow-lg">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-gamepad text-2xl"></i>
+                    <a href="index.html" class="font-semibold text-xl">GameData</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-gray-300 hover:text-white">Home</a>
+                    <a href="dashboard.html" class="text-gray-300 hover:text-white">Dashboard</a>
+                    <a href="data-entry.html" class="text-gray-300 hover:text-white">Data Entry</a>
+                    <a href="predictions.html" class="text-white font-medium">Predictions</a>
+                </div>
+                <button class="md:hidden focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="py-12">
+        <div class="container mx-auto px-6">
+            <div class="max-w-6xl mx-auto">
+                <!-- Header -->
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                        <i class="fas fa-chart-line text-indigo-600 mr-2"></i> Game Sales Predictions
+                    </h1>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                        Use our machine learning model to predict potential sales based on game attributes
+                    </p>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Prediction Form -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                            <div class="bg-indigo-700 text-white px-6 py-4">
+                                <h2 class="text-xl font-bold">
+                                    <i class="fas fa-sliders-h mr-2"></i> Prediction Parameters
+                                </h2>
+                            </div>
+                            <form id="predictionForm" class="p-6 space-y-4">
+                                <div>
+                                    <label for="predGenre" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Genre <span class="text-red-500">*</span>
+                                    </label>
+                                    <select id="predGenre" name="genre" required
+                                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                        <option value="">Select Genre</option>
+                                        <option value="action">Action</option>
+                                        <option value="rpg">Role-Playing</option>
+                                        <option value="adventure">Adventure</option>
+                                        <option value="shooter">Shooter</option>
+                                        <option value="sports">Sports</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="predPlatform" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Platform <span class="text-red-500">*</span>
+                                    </label>
+                                    <select id="predPlatform" name="platform" required
+                                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                        <option value="">Select Platform</option>
+                                        <option value="ps5">PlayStation 5</option>
+                                        <option value="xbox">Xbox Series X</option>
+                                        <option value="switch">Nintendo Switch</option>
+                                        <option value="pc">PC</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="predScore" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Metacritic Score <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="number" id="predScore" name="score" min="0" max="100" required
+                                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="0-100">
+                                </div>
+
+                                <div>
+                                    <label for="predBudget" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Development Budget (in millions)
+                                    </label>
+                                    <input type="number" id="predBudget" name="budget" min="0" step="0.1"
+                                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="e.g., 50.0">
+                                </div>
+
+                                <div>
+                                    <label for="predMonth" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Release Month
+                                    </label>
+                                    <select id="predMonth" name="month"
+                                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                        <option value="">Any Month</option>
+                                        <option value="11">November (Holiday Season)</option>
+                                        <option value="3">March (Spring)</option>
+                                        <option value="9">September (Fall)</option>
+                                        <option value="6">June (Summer)</option>
+                                    </select>
+                                </div>
+
+                                <button type="submit" class="w-full mt-6 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium">
+                                    <i class="fas fa-calculator mr-2"></i> Predict Sales
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Results Section -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- Prediction Result Card -->
+                        <div id="predictionResult" class="hidden">
+                            <div class="prediction-card text-white rounded-xl shadow-lg overflow-hidden">
+                                <div class="p-6">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h2 class="text-xl font-bold mb-1">Predicted Sales</h2>
+                                            <p class="text-indigo-200">Based on the provided parameters</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-4xl font-bold" id="predictedSales">--</div>
+                                            <div class="text-indigo-200 text-sm">million units</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-6">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-indigo-200">Confidence Interval</span>
+                                            <span class="font-medium" id="confidenceRange">-- to -- million</span>
+                                        </div>
+                                        <div class="w-full bg-indigo-800 rounded-full h-2.5">
+                                            <div id="confidenceBar" class="bg-yellow-400 h-2.5 rounded-full" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Prediction Details -->
+                            <div class="mt-4 bg-white rounded-xl shadow-lg overflow-hidden">
+                                <div class="p-6">
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                                        <i class="fas fa-info-circle text-indigo-600 mr-2"></i>Prediction Details
+                                    </h3>
+                                    <div id="predictionChart" style="height: 300px;"></div>
+                                    
+                                    <div class="mt-6 grid sm:grid-cols-2 gap-4">
+                                        <div class="bg-gray-50 p-4 rounded-lg">
+                                            <h4 class="font-medium text-gray-700 mb-2">Key Influencers</h4>
+                                            <ul class="space-y-2 text-sm text-gray-600">
+                                                <li class="flex items-center">
+                                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                                    <span id="influencer1">Genre: Action</span>
+                                                </li>
+                                                <li class="flex items-center">
+                                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                                    <span id="influencer2">Platform: PlayStation 5</span>
+                                                </li>
+                                                <li class="flex items-center">
+                                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                                    <span id="influencer3">Score: 85+</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="bg-gray-50 p-4 rounded-lg">
+                                            <h4 class="font-medium text-gray-700 mb-2">Comparable Titles</h4>
+                                            <ul class="space-y-2 text-sm text-gray-600">
+                                                <li class="flex items-center">
+                                                    <i class="fas fa-gamepad text-indigo-500 mr-2"></i>
+                                                    <span id="compGame1">Game A (3.2M units)</span>
+                                                </li>
+                                                <li class="flex items-center">
+                                                    <i class="fas fa-gamepad text-indigo-500 mr-2"></i>
+                                                    <span id="compGame2">Game B (2.8M units)</span>
+                                                </li>
+                                                <li class="flex items-center">
+                                                    <i class="fas fa-gamepad text-indigo-500 mr-2"></i>
+                                                    <span id="compGame3">Game C (4.1M units)</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Model Information -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                            <div class="p-6">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                                    <i class="fas fa-brain text-indigo-600 mr-2"></i>About Our Prediction Model
+                                </h3>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="model-card p-4 border border-gray-200 rounded-lg transition">
+                                        <h4 class="font-medium text-gray-800 mb-2 flex items-center">
+                                            <i class="fas fa-cogs text-indigo-500 mr-2"></i>Model Architecture
+                                        </h4>
+                                        <p class="text-sm text-gray-600">
+                                            Our model uses a Random Forest Regressor trained on 10,000+ game records, achieving 89% accuracy in cross-validation tests.
+                                        </p>
+                                    </div>
+                                    <div class="model-card p-4 border border-gray-200 rounded-lg transition">
+                                        <h4 class="font-medium text-gray-800 mb-2 flex items-center">
+                                            <i class="fas fa-chart-bar text-indigo-500 mr-2"></i>Key Features
+                                        </h4>
+                                        <p class="text-sm text-gray-600">
+                                            Considers genre, platform, critic scores, release timing, and historical sales patterns for similar titles.
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6">
+                                    <h4 class="font-medium text-gray-700 mb-2">Model Accuracy Metrics</h4>
+                                    <div id="accuracyChart" style="height: 200px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-gamepad text-2xl"></i>
+                        <span class="font-semibold text-xl">GameData</span>
+                    </div>
+                    <p class="mt-2 text-gray-400">© 2023 Game Data Analytics. All rights reserved.</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize accuracy chart
+            const accuracyData = [{
+                values: [89, 7, 4],
+                labels: ['Correct Predictions', 'Overestimations', 'Underestimations'],
+                type: 'pie',
+                marker: {
+                    colors: ['#4f46e5', '#a5b4fc', '#c7d2fe']
+                },
+                textinfo: 'percent',
+                hoverinfo: 'label+percent',
+                hole: .4
+            }];
+            
+            const accuracyLayout = {
+                showlegend: false,
+                margin: {t: 0, b: 0, l: 0, r: 0}
+            };
+            
+            Plotly.newPlot('accuracyChart', accuracyData, accuracyLayout);
+            
+            // Handle form submission
+            const form = document.getElementById('predictionForm');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate form
+                const genre = document.getElementById('predGenre').value;
+                const platform = document.getElementById('predPlatform').value;
+                const score = document.getElementById('predScore').value;
+                
+                if (!genre || !platform || !score) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                // Simulate prediction (in a real app, this would call your ML API)
+                const baseSales = {
+                    'action': 3.5,
+                    'rpg': 2.8,
+                    'adventure': 2.2,
+                    'shooter': 4.0,
+                    'sports': 1.8
+                };
+                
+                const platformMultiplier = {
+                    'ps5': 1.2,
+                    'xbox': 1.0,
+                    'switch': 0.9,
+                    'pc': 0.8
+                };
+                
+                const scoreImpact = (parseInt(score) - 70) * 0.05;
+                const budget = document.getElementById('predBudget').value || 0;
+                const budgetImpact = budget * 0.02;
+                const month = document.getElementById('predMonth').value;
+                const monthMultiplier = month === '11' ? 1.3 : 1.0;
+                
+                // Calculate prediction
+                let prediction = baseSales[genre] * platformMultiplier[platform];
+                prediction = prediction * (1 + scoreImpact) * (1 + budgetImpact) * monthMultiplier;
+                
+                // Add some randomness for demo purposes
+                prediction = prediction * (0.9 + Math.random() * 0.2);
+                prediction = Math.max(0.5, prediction); // Minimum 0.5M
+                
+                // Display results
+                document.getElementById('predictedSales').textContent = prediction.toFixed(1);
+                
+                const lowerBound = (prediction * 0.85).toFixed(1);
+                const upperBound = (prediction * 1.15).toFixed(1);
+                document.getElementById('confidenceRange').textContent = `${lowerBound} to ${upperBound}`;
+                document.getElementById('confidenceBar').style.width = '75%';
+                
+                // Update influencers
+                document.getElementById('influencer1').textContent = `Genre: ${genre.charAt(0).toUpperCase() + genre.slice(1)}`;
+                document.getElementById('influencer2').textContent = `Platform: ${document.getElementById('predPlatform').options[document.getElementById('predPlatform').selectedIndex].text}`;
+                document.getElementById('influencer3').textContent = `Score: ${score}`;
+                
+                // Show result section
+                document.getElementById('predictionResult').classList.remove('hidden');
+                
+                // Update prediction chart
+                const predictionData = [{
+                    y: ['Genre', 'Platform', 'Score', 'Budget', 'Timing'],
+                    x: [
+                        baseSales[genre] * 0.8,
+                        platformMultiplier[platform] * 2.5,
+                        scoreImpact * 10 + 5,
+                        budgetImpact * 50,
+                        month === '11' ? 3 : 1
+                    ],
+                    type: 'bar',
+                    orientation: 'h',
+                    marker: {
+                        color: '#4f46e5'
+                    }
+                }];
+                
+                const predictionLayout = {
+                    margin: {t: 0, b: 30, l: 100, r: 0},
+                    xaxis: {showgrid: false, zeroline: false, showticklabels: false},
+                    yaxis: {automargin: true}
+                };
+                
+                Plotly.newPlot('predictionChart', predictionData, predictionLayout);
+            });
+        });
+    </script>
+</body>
+</html>
